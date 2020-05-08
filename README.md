@@ -13,19 +13,19 @@ These instructions are top-level, please consult readme of each individual packa
 
 ### Base
 
-* [Syropod Package](https://bitbucket.csiro.au/projects/HEX/repos/bullet_syropod):
-  * `git clone https://bitbucket.csiro.au/scm/hex/bullet_syropod.git`
-* [Syropod High-level Controller](https://bitbucket.csiro.au/projects/HEX/repos/syropod_highlevel_controller):
-  * `git clone https://bitbucket.csiro.au/scm/hex/syropod_highlevel_controller.git`
-* [Syropod Remote](https://bitbucket.csiro.au/projects/HEX/repos/syropod_remote):
-  * `git clone https://bitbucket.csiro.au/scm/hex/syropod_remote.git`
+* [Syropod Package](https://github.com/csiro-robotics/bullet_syropod):
+  * `git clone https://github.com/csiro-robotics/bullet_syropod.git`
+* [Syropod High-level Controller](https://github.com/csiro-robotics/syropod_highlevel_controller):
+  * `git clone https://github.com/csiro-robotics/syropod_highlevel_controller.git`
+* [Syropod Remote](https://github.com/csiro-robotics/syropod_remote):
+  * `git clone https://github.com/csiro-robotics/syropod_remote.git`
 
 ### Control Input
 
-* [Joypad Control](https://bitbucket.csiro.au/projects/HEX/repos/syropod_remote):
+* [Joypad Control](https://github.com/csiro-robotics/syropod_remote):
   * `sudo apt-get install ros-kinetic-joy`
-* [RQT Reconfigure Control](https://bitbucket.csiro.au/projects/HEX/repos/syropod_keyboard_control) (Optional):
-  * `git clone https://bitbucket.csiro.au/scm/hex/syropod_keyboard_control.git`
+* [RQT Reconfigure Control](https://github.com/csiro-robotics/syropod_keyboard_control) (Optional):
+  * `git clone https://github.com/csiro-robotics/syropod_keyboard_control.git`
 
 Instructions on the use of differing control inputs can be found at the individual repo links above.
 
@@ -54,7 +54,7 @@ Example: To run Bullet Insectoid configuration in Gazebo but without rviz visual
 `roslaunch bullet_syropod bullet_highlevel.launch config:=bullet_insectoid rviz:=false gazebo:=true reconfigure:=true plot:=true`
 
 Tuning of configuration parameters is done using the corresponding config yaml files.
-Consult [`syropod_highlevel_controller/config/readme.md`](https://bitbucket.csiro.au/projects/HEX/repos/syropod_highlevel_controller/browse/config) for details.
+Consult [`syropod_highlevel_controller/config/readme.md`](https://github.com/csiro-robotics/syropod_highlevel_controller/tree/master/config) for details.
 
 ### Typical Usage
 
@@ -83,4 +83,4 @@ Tuning of high-level parameters is done using the following parameter files.
 * Auto Posing Cycle Parameters - arg=auto_pose:
   * `/config/auto_pose.yaml`
 
-Consult [`syropod_highlevel_controller/config/readme.md`](https://bitbucket.csiro.au/projects/HEX/repos/syropod_highlevel_controller/browse/config) for details.
+Consult [`syropod_highlevel_controller/config/readme.md`](https://github.com/csiro-robotics/syropod_highlevel_controller/tree/master/config) for details.
