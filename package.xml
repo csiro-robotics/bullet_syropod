@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+
+  <name>bullet_syropod</name>
+  <version>0.1.0</version>
+  <description>The bullet_syropod package</description>
+
+  <maintainer email="shc-support@csiro.au"></maintainer>
+
+  <license>CSIRO Open Source Software Licence Agreement (Ref: LICENSE file)</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

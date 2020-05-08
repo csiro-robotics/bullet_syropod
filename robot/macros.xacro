@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2020 -->
+<!-- Commonwealth Scientific and Industrial Research Organisation (CSIRO) -->
+<!-- ABN 41 687 119 230 -->
+<!-- Written by Eranda Tennakoon <kulatunga.tennakoon@hdr.qut.edu.au> -->
+<!-- Modified by Benjamin Tam <benjamin.tam@data61.csiro.au> -->
+<!-- Modified by Samith Ashan <samith.ashan@data61.csiro.au> -->
+
+<robot name="weaver_boxmodel" 
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <macro name="cylinder_inertia" params="m r h">
+        <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0" iyy="${m*(3*r*r+h*h)/12}" iyz = "0" izz="${m*r*r/2}" />
+    </macro>
+
+    <macro name="box_inertia" params="m x y z">
+        <inertia ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0" iyy="${m*(x*x+z*z)/12}" iyz = "0" izz="${m*(x*x+z*z)/12}" />
+    </macro>
+
+    <macro name="sphere_inertia" params="m r">
+        <inertia ixx="${2*m*r*r/5}" ixy = "0" ixz = "0" iyy="${2*m*r*r/5}" iyz = "0" izz="${2*m*r*r/5}" />
+    </macro>
+
+
+    <macro name="leg" params="prefix offset reflect">
+
+        <!-- base_motor link (Base motor visual component is attached to the main body)-->
+        <link name="${prefix}_basem_link">
+            <visual>
+                <geometry>
+                    <!-- <box size="${basemwidth} ${basemlength} ${basemheight}"/> -->
+                    <box size="0.001 0.001 0.001"/>
+                    <!--<mesh filename="package://bullet_syropod/meshes/base_motor.STL" />-->
+                </geometry>
+                <origin xyz="${basemlength} 0 0" rpy="0 0 ${reflect*basem_yaw}"/>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${basemlength} ${basemwidth} ${basemheight}"/>
+                </geometry>
+                <origin xyz="${basemlength/2} 0 0" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${basemmass}"/>
+                <box_inertia m="${basemmass}" x="${basemlength}" y="${basemwidth}" z="${basemheight}"/>
+            </inertial>
+        </link>
+        <joint name="${prefix}_basem_joint" type="fixed">
+            <parent link="base_link"/>
+            <child link="${prefix}_basem_link"/>
+            <origin xyz = "${offset*(BodyLength/2-BodyLengthOffset)} ${-reflect*BodyWidth/2} ${BodyHeight/2}" rpy = "${basem_roll} ${basem_pitch} ${-reflect*basem_yaw}"/>
+        </joint>
+
+        <!-- coxa link -->
+        <link name="${prefix}_coxa_link">
+            <visual>
+                <geometry>
+                    <!--<box size="${coxalength} ${coxawidth} ${coxaheight}"/>-->
+                    <mesh filename="package://bullet_syropod/meshes/Coxa.STL" />
+                </geometry>
+                <origin xyz="0 ${reflect*coxa_d} ${coxaheight/4}" rpy="0 0 ${reflect*coxa_pitch}"/>
+                <material name="white"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${coxalength} ${coxawidth} ${coxaheight}"/>
+                </geometry>
+                <origin xyz="0 ${reflect*coxa_d} ${coxaheight/2}" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${coxamass}"/>
+                <box_inertia m="${coxamass}" x="${coxalength}" y="${coxawidth}" z="${coxaheight}"/>
+            </inertial>
+        </link>
+        <joint name="${prefix}_coxa_joint" type="revolute">
+            <limit upper="${coxaupperlimit}" lower="${coxalowerlimit}" velocity="${coxavelocitylimit}" effort="${coxaeffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_basem_link"/>
+            <child link="${prefix}_coxa_link"/>
+            <origin xyz = "${basemlength} 0 0 " rpy = "${coxa_roll} ${coxa_pitch} ${-offset*reflect*coxa_yaw}"/>
+        </joint>
+        <transmission name="${prefix}_coxa_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_coxa_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_coxa_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- coxat link -->
+        <link name="${prefix}_coxat_link">
+            <visual>
+                <geometry>
+                    <!--<box size="${coxatlength} ${coxatwidth} ${coxatheight}"/>-->
+                    <mesh filename="package://bullet_syropod/meshes/Coxa_t.STL" />
+                </geometry>
+                <origin xyz="0 0 ${coxacoxatoffset}" rpy="0 0 ${coxat_yaw}"/>
+                <material name="white"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${coxatlength} ${coxatwidth} ${coxatheight}"/>
+                </geometry>
+                <origin xyz="${coxat_d} 0 -${coxatheight}" rpy="0 0 ${coxat_yaw}"/>
+            </collision>
+            <inertial>
+                <mass value="${coxatmass}"/>
+                <box_inertia m="${coxatmass}" x="${coxatlength}" y="${coxatwidth}" z="${coxatheight}"/>
+            </inertial>
+        </link>
+        <joint name="${prefix}_coxat_joint" type="revolute">
+            <limit upper="${coxatupperlimit}" lower="${coxatlowerlimit}" velocity="${coxatvelocitylimit}" effort="${coxateffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_coxa_link"/>
+            <child link="${prefix}_coxat_link"/>
+            <origin xyz = "0 ${reflect*coxacoxatoffset3} ${coxacoxatoffset2}" rpy = "0 ${coxat_pitch} 0"/>
+        </joint>
+        <transmission name="${prefix}_coxat_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_coxat_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_coxat_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- femur link -->
+        <link name="${prefix}_femur_link">
+            <visual>
+                <geometry>
+                    <!--<box size="${femurlength} ${femurwidth} ${femurheight}"/>-->
+                    <mesh filename="package://bullet_syropod/meshes/Femur_tibia.STL" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="white"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <!--<box size="${femurlength} ${femurwidth} ${femurheight}"/> -->
+                    <mesh filename="package://bullet_syropod/meshes/Femur_tibia.STL" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${femurmass}"/>
+                <box_inertia m="${femurmass}" x="${femurlength}" y="${femurwidth}" z="${femurheight}"/>
+            </inertial>
+        </link>
+        <joint name="${prefix}_femur_joint" type="revolute">
+            <limit upper="${femurupperlimit}" lower="${femurlowerlimit}" velocity="${femurvelocitylimit}" effort="${femureffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_coxat_link"/>
+            <child link="${prefix}_femur_link"/>
+            <origin xyz = "${coxatfemuroffset} 0 ${coxatfemuroffset2}" rpy = "${femur_roll} ${femur_pitch} ${femur_yaw}"/>
+        </joint>
+        <transmission name="${prefix}_femur_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_femur_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_femur_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- tibia link -->
+        <link name="${prefix}_tibia_link">
+            <visual>
+                <geometry>
+                    <!--<box size="${tibialength} ${tibiawidth} ${tibiaheight}"/> -->
+                    <mesh filename="package://bullet_syropod/meshes/Femur_tibia.STL" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="white"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <!--<box size="${tibialength} ${tibiawidth} ${tibiaheight}"/>-->
+                    <mesh filename="package://bullet_syropod/meshes/Femur_tibia.STL" />
+                </geometry>
+                <!--<origin xyz="${tibialength/2} 0 0" rpy="0 0 0"/>-->
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${tibiamass}"/>
+                <box_inertia m="${tibiamass}" x="${tibialength}" y="${tibiawidth}" z="${tibiaheight}"/>
+            </inertial>
+        </link>
+        <joint name="${prefix}_tibia_joint" type="revolute">
+            <limit upper="${tibiaupperlimit}" lower="${tibialowerlimit}" velocity="${tibiavelocitylimit}" effort="${tibiaeffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_femur_link"/>
+            <child link="${prefix}_tibia_link"/>
+            <origin xyz = "${femurtibiaoffset} 0 0" rpy = "${tibia_roll} ${tibia_pitch} ${tibia_yaw}"/>
+        </joint>
+        <transmission name="${prefix}_tibia_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_tibia_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_tibia_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- tarsus link -->
+        <link name="${prefix}_tarsus_link">
+            <visual>
+                <geometry>
+                    <!-- <cylinder length="${tarsuslength}" radius="${tarsusradius}"/> -->
+                    <mesh filename="package://bullet_syropod/meshes/Tarsus.STL" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="white"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <!--<cylinder length="${tarsuslength}" radius="${tarsusradius}"/>-->
+                    <mesh filename="package://bullet_syropod/meshes/Tarsus.STL" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${tarsusmass}"/>
+                <cylinder_inertia m="${tarsusmass}" h="${tarsuslength}" r="${tarsusradius}"/>
+                <origin xyz="${tarsuslength/2} 0 0" rpy="0 -1.5708 0"/>
+            </inertial>
+        </link>
+        <joint name="${prefix}_tarsus_joint" type="revolute">
+            <limit upper="${tarsusupperlimit}" lower="${tarsuslowerlimit}" velocity="${tarsusvelocitylimit}" effort="${tarsuseffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_tibia_link"/>
+            <child link="${prefix}_tarsus_link"/>
+            <origin xyz = "${tibiatarsusoffset} 0 0" rpy = "${tarsus_roll} ${tarsus_pitch} ${tarsus_yaw}"/>
+        </joint>
+        <transmission name="${prefix}_tarsus_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_tarsus_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_tarsus_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+
+        <!--Gazebo specific tags  -->
+        <gazebo reference="${prefix}_basem_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <material>Gazebo/White</material>
+            <!-- <selfCollide>True</selfCollide> -->
+            <gravity>True</gravity>
+        </gazebo>
+        <gazebo reference="${prefix}_coxa_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <material>Gazebo/Black</material>
+            <!-- <selfCollide>True</selfCollide> -->
+            <gravity>True</gravity>
+        </gazebo>
+        <gazebo reference="${prefix}_coxat_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <kp>1000000.0</kp>
+            <kd>400000000.0</kd>
+            <material>Gazebo/Black</material>
+            <!-- <selfCollide>True</selfCollide> -->
+            <gravity>True</gravity>
+        </gazebo>
+        <gazebo reference="${prefix}_femur_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <kp>1000000000.0</kp>
+            <kd>400000000.0</kd>
+            <material>Gazebo/Black</material>
+            <!-- <selfCollide>True</selfCollide> -->
+            <gravity>True</gravity>
+        </gazebo>
+        <gazebo reference="${prefix}_tibia_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <kp>1000000000.0</kp>
+            <kd>400000000.0</kd>
+            <material>Gazebo/Black</material>
+            <!-- <selfCollide>True</selfCollide> -->
+            <gravity>True</gravity>
+        </gazebo>
+        <gazebo reference="${prefix}_tarsus_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu1}</mu2>
+            <minDepth>0.005</minDepth>
+            <kp>100000000000.0</kp>
+            <kd>400000000.0</kd>
+            <material>Gazebo/Black</material>
+            <!-- <selfCollide>True</selfCollide> -->
+            <gravity>True</gravity>
+        </gazebo>
+
+    </macro>
+
+
+
+</robot>

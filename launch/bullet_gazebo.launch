@@ -1,0 +1,122 @@
+<!-- -*- xml -*- -->
+
+<launch>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    
+  <!-- more default parameters can be changed here -->
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+	<!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find bullet_syropod)/robot/bullet.xacro" />
+  
+  <param name="box_description" command="$(find xacro)/xacro $(find bullet_syropod)/robot/robot_box.urdf" />
+  
+  <!-- Load joint controller configurations from YAML file to parameter server  -->
+  <rosparam file="$(find bullet_syropod)/config/bullet_gazebo_controllers.yaml" command="load"/>
+  
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/syropod" args="joint_state_controller
+                                        AL_coxa_joint 
+                                        AR_coxa_joint 
+                                        BL_coxa_joint 
+                                        BR_coxa_joint 
+                                        CL_coxa_joint 
+                                        CR_coxa_joint 
+                                        AL_coxat_joint 
+                                        AR_coxat_joint 
+                                        BL_coxat_joint 
+                                        BR_coxat_joint 
+                                        CL_coxat_joint 
+                                        CR_coxat_joint
+                                        AL_femur_joint 
+                                        AR_femur_joint 
+                                        BL_femur_joint 
+                                        BR_femur_joint 
+                                        CL_femur_joint 
+                                        CR_femur_joint 
+                                        AL_tibia_joint 
+                                        AR_tibia_joint 
+                                        BL_tibia_joint 
+                                        BR_tibia_joint 
+                                        CL_tibia_joint 
+                                        CR_tibia_joint 
+                                        AL_tarsus_joint 
+                                        AR_tarsus_joint 
+                                        BL_tarsus_joint 
+                                        BR_tarsus_joint 
+                                        CL_tarsus_joint 
+                                        CR_tarsus_joint"/>
+                                        
+  <!-- Service call to set for spawner the corresponding robot state consisting of init pose and joint angles -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+    args="-urdf 
+      -model hexapod 
+      -param robot_description
+      -x 0.0
+      -y 0.0 
+      -z 0.245
+      -R 0.0 
+      -P 0.0 
+      -Y 0.0 
+      -J AR_coxat_joint 0.0
+      -J AR_coxa_joint 0.0
+      -J AR_femur_joint 0.0
+      -J AR_tibia_joint 0.0
+      -J AR_tarsus_joint 0.0
+      -J BR_coxat_joint 0.0
+      -J BR_coxa_joint 0.0
+      -J BR_femur_joint 0.0
+      -J BR_tibia_joint 0.0
+      -J BR_tarsus_joint 0.0
+      -J CR_coxat_joint 0.0
+      -J CR_coxa_joint 0.0
+      -J CR_femur_joint 0.0
+      -J CR_tibia_joint 0.0
+      -J CR_tarsus_joint 0.0
+      -J CL_coxat_joint 0.0
+      -J CL_coxa_joint 0.0
+      -J CL_femur_joint 0.0
+      -J CL_tibia_joint 0.0
+      -J CL_tarsus_joint 0.0
+      -J BL_coxat_joint 0.0
+      -J BL_coxa_joint 0.0
+      -J BL_femur_joint 0.0
+      -J BL_tibia_joint 0.0
+      -J BL_tarsus_joint 0.0
+      -J AL_coxat_joint 0.0
+      -J AL_coxa_joint 0.0
+      -J AL_femur_joint 0.0
+      -J AL_tibia_joint 0.0
+      -J AL_tarsus_joint 0.0"
+  respawn="false" output="screen"/>
+   
+ <node name="urdf_spawner2" pkg="gazebo_ros" type="spawn_model" args="-urdf 
+      -model box 
+      -param box_description
+      -x 0.0
+      -y 0.0 
+      -z 0.0
+      -R 0.0 
+      -P 0.0 
+      -Y 0.0 " respawn="false" output="screen"/>
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">
+    <remap from="/joint_states" to="/syropod/joint_states" /> 
+  </node>
+</launch>

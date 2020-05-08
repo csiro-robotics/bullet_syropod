@@ -1,0 +1,71 @@
+<!-- -*- xml -*- -->
+<!-- Record Bullet data automatically in (separate) rosbags -->
+
+<launch>
+
+  <arg name="bagfile_name" default="bagfiles"/>
+
+  <!-- Path to file system storage for recorded rosbags -->
+  <arg name="path_to_log_directory" default="/home"/>
+  
+  <!-- Bag file splitting -->
+  <arg name="max_bag_duration" default="10m" />
+  <arg name="max_bag_splits" default="1" />
+
+  <!-- Bools to record data -->
+  <arg name="record_all" default="false" />
+  <arg name="record_hardware" default="false"/>
+  <arg name="record_highlevel" default="false"/>
+  <arg name="record_sensors" default="false"/>
+  <arg name="record_admittance_test" default="false"/>
+
+  <!-- Topics to be recorded -->
+  <arg name="hardware_topics"
+       default="/joint_states
+                /servo_diagnostics
+                /tip_states
+                "/>
+
+  <arg name="highlevel_topics"
+       default="-e '(/shc/(.*)|/syropod_remote/(.*)|/tf)'"/>
+        
+  <!-- Record data (Timestamped)-->
+  <node pkg="rosbag" type="record"
+        name="rosbag_record_all"
+        args="--split --duration $(arg max_bag_duration)
+              --max-splits $(arg max_bag_splits) 
+              -o $(arg path_to_log_directory)/$(arg bagfile_name)_all -a"
+        if="$(arg record_all)"/>
+  
+  <node pkg="rosbag" type="record"
+        name="rosbag_record_hardware"
+        args="--split --duration $(arg max_bag_duration)
+              --max-splits $(arg max_bag_splits) 
+              -o $(arg path_to_log_directory)/$(arg bagfile_name)_hardware $(arg hardware_topics)"
+        if="$(arg record_hardware)" />
+
+  <node pkg="rosbag" type="record"
+        name="rosbag_record_shc"
+        args="--split --duration $(arg max_bag_duration)
+              --max-splits $(arg max_bag_splits) 
+              -o $(arg path_to_log_directory)/$(arg bagfile_name)_highlevel $(arg highlevel_topics)"
+        if="$(arg record_highlevel)" />
+        
+  <!-- Record data (Latest)-->
+  <node pkg="rosbag" type="record"
+        name="rosbag_record_all_latest"
+        args="-O $(arg path_to_log_directory)/$(arg bagfile_name)_all_latest -a"
+        if="$(arg record_all)"/>
+  
+  <node pkg="rosbag" type="record"
+        name="rosbag_record_hardware_latest"
+        args="-O $(arg path_to_log_directory)/$(arg bagfile_name)_hardware_latest $(arg hardware_topics)"
+        if="$(arg record_hardware)" />
+
+  <node pkg="rosbag" type="record"
+        name="rosbag_record_shc_latest"
+        args="-O $(arg path_to_log_directory)/$(arg bagfile_name)_highlevel_latest $(arg highlevel_topics)"
+        if="$(arg record_highlevel)" />
+
+
+</launch>

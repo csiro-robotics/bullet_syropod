@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2020 -->
+<!-- Commonwealth Scientific and Industrial Research Organisation (CSIRO) -->
+<!-- ABN 41 687 119 230 -->
+<!-- Written by Eranda Tennakoon <kulatunga.tennakoon@hdr.qut.edu.au> -->
+<!-- Modified by Benjamin Tam <benjamin.tam@data61.csiro.au> -->
+<!-- Modified by Fletcher Talbot <fletcher.talbot@csiro.au> -->
+<!-- Modified by Samith Ashan <samith.ashan@data61.csiro.au> -->
+
+<robot name="bullet_model" 
+	xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+			<robotNamespace>/syropod</robotNamespace>
+		</plugin>
+
+		<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+			<alwaysOn>true</alwaysOn>
+			<bodyName>base_link</bodyName>
+			<topicName>imu</topicName>
+			<serviceName>imu_service</serviceName>
+			<gaussianNoise>0.0</gaussianNoise>
+			<updateRate>20.0</updateRate>
+		</plugin>
+
+	</gazebo>
+
+	<gazebo reference="base_link">
+		<material>Gazebo/Black</material>
+		<selfCollide>True</selfCollide>
+		<gravity>True</gravity>
+	</gazebo>
+
+	<xacro:include filename="$(find bullet_syropod)/robot/macros.xacro" />
+
+	<!-- model dimentions and parameters -->
+
+	<xacro:property name="BodyLength" value="0.6" />
+	<!-- along x axis -->
+	<xacro:property name="BodyWidth" value="0.14" />
+	<!-- along y axis -->
+	<xacro:property name="BodyHeight" value="0.101" />
+	<!-- along z axis -->
+	<xacro:property name="BodyMass" value="6.0" />
+	<xacro:property name="BodyLengthOffset" value="0.05" />
+
+	<!-- base_motor link -->
+	<xacro:property name="basemwidth" value="0.04" />
+	<xacro:property name="basemlength" value="0.075" />
+	<xacro:property name="basemheight" value="0.046" />
+	<xacro:property name="basemmass" value="0.2" />
+
+	<xacro:property name="basem_d" value="0.023" />
+	<xacro:property name="basem_yaw" value="1.5708" />
+	<xacro:property name="basem_pitch" value="0.0" />
+	<xacro:property name="basem_roll" value="0.0" />
+
+	<!-- coxa link -->
+	<xacro:property name="coxawidth" value="0.06" />
+	<xacro:property name="coxalength" value="0.046" />
+	<xacro:property name="coxaheight" value="0.04" />
+	<xacro:property name="coxamass" value="0.2" />
+
+	<xacro:property name="coxa_d" value="-0.0183" />
+	<xacro:property name="coxa_yaw" value="0.0" />
+	<xacro:property name="coxa_pitch" value="1.5708" />
+	<xacro:property name="coxa_roll" value="0.0" />
+
+	<xacro:property name="coxaupperlimit" value="2.4" />
+	<xacro:property name="coxalowerlimit" value="-2.4" />
+	<xacro:property name="coxaeffortlimit" value="6.0" />
+	<xacro:property name="coxavelocitylimit" value="3.14159265359" />
+
+	<xacro:property name="basemcoxaoffset" value ="-0.0145" />
+
+	<!-- coxa_t link -->
+	<xacro:property name="coxatwidth" value="0.06" />
+	<xacro:property name="coxatlength" value="0.046" />
+	<xacro:property name="coxatheight" value="0.04" />
+	<xacro:property name="coxatmass" value="0.2" />
+
+	<xacro:property name="coxat_d" value="0.013" />
+	<xacro:property name="coxat_yaw" value="1.5708" />
+	<xacro:property name="coxat_pitch" value="-1.5708" />
+	<xacro:property name="coxat_roll" value="1.5708" />
+
+	<xacro:property name="coxatupperlimit" value="2.4" />
+	<xacro:property name="coxatlowerlimit" value="-2.4" />
+	<xacro:property name="coxateffortlimit" value="6.0" />
+	<xacro:property name="coxatvelocitylimit" value="3.14159265359" />
+
+	<xacro:property name="coxacoxatoffset" value ="-0.02804" />
+	<xacro:property name="coxacoxatoffset2" value ="0.0457" />
+	<xacro:property name="coxacoxatoffset3" value ="-0.04678" />
+
+	<!-- femur link -->
+	<xacro:property name="femurwidth" value="0.04" />
+	<xacro:property name="femurlength" value="0.11" />
+	<xacro:property name="femurheight" value="0.046" />
+	<xacro:property name="femurmass" value="0.4" />
+
+	<xacro:property name="femur_d" value="0.035" />
+	<xacro:property name="femur_yaw" value="0" />
+	<xacro:property name="femur_pitch" value="0" />
+	<xacro:property name="femur_roll" value="1.5708" />
+
+	<xacro:property name="femurupperlimit" value="2.4" />
+	<xacro:property name="femurlowerlimit" value="-2.4" />
+	<xacro:property name="femureffortlimit" value="6.0" />
+	<xacro:property name="femurvelocitylimit" value="3.141592653590" />
+
+	<xacro:property name="coxatfemuroffset" value="0.02898" />
+	<xacro:property name="coxatfemuroffset2" value="-0.06024" />
+
+	<!-- tibia link -->
+	<xacro:property name="tibiawidth" value="0.04" />
+	<xacro:property name="tibialength" value="0.11" />
+	<xacro:property name="tibiaheight" value="0.046" />
+	<xacro:property name="tibiamass" value="0.152" />
+
+	<xacro:property name="tibia_d" value="0" />
+	<xacro:property name="tibia_yaw" value="0" />
+	<xacro:property name="tibia_pitch" value="0" />
+	<xacro:property name="tibia_roll" value="0" />
+
+	<xacro:property name="tibiaupperlimit" value="2.4" />
+	<xacro:property name="tibialowerlimit" value="-2.4" />
+	<xacro:property name="tibiaeffortlimit" value="6.0" />
+	<xacro:property name="tibiavelocitylimit" value="3.14159265359" />
+
+	<xacro:property name="femurtibiaoffset" value="0.114" />
+
+	<!-- tarsus link -->
+	<xacro:property name="tarsuslength" value="0.16312" />
+	<xacro:property name="tarsusradius" value="0.01" />
+	<xacro:property name="tarsusmass" value="0.076035" />
+
+	<xacro:property name="tarsus_d" value="0" />
+	<xacro:property name="tarsus_yaw" value="0" />
+	<xacro:property name="tarsus_pitch" value="0" />
+	<xacro:property name="tarsus_roll" value="0" />
+
+	<xacro:property name="tarsusupperlimit" value="2.4" />
+	<xacro:property name="tarsuslowerlimit" value="-2.4" />
+	<xacro:property name="tarsuseffortlimit" value="6.0" />
+	<xacro:property name="tarsusvelocitylimit" value="3.14159265359" />
+
+	<xacro:property name="tibiatarsusoffset" value="0.114" />
+
+
+	<!-- TODO: Set individual static friction values for links instead of default 0.2 -->
+	<xacro:property name="defaultmu1" value="200" />
+	<xacro:property name="defaultmu2" value="100" />
+	<xacro:property name="defaultdamping" value="0.0" />
+	<xacro:property name="defaultmu3" value="0.9" />
+
+
+
+	<!-- Link description -->
+
+	<link name="dummy_link" />
+	<!-- Because kdl parser doesn't accept a root link with inertia -->
+
+	<joint name="base_joint" type="fixed">
+		<parent link="dummy_link"/>
+		<child link="base_link"/>
+	</joint>
+
+	<link name="base_link">
+		<visual>
+			<geometry>
+				<!--<box size="${BodyLength} ${BodyWidth} ${BodyHeight}"/>-->
+				<mesh filename="package://bullet_syropod/meshes/Body.STL" />
+			</geometry>
+			<origin xyz="0 0 ${BodyHeight/2}" rpy="0 0 0"/>
+		</visual>
+		<collision>
+			<geometry>
+				<box size="${BodyLength} ${BodyWidth} ${BodyHeight}"/>
+			</geometry>
+			<origin xyz="0 0 ${BodyHeight/2}" rpy="0 0 0"/>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 ${BodyHeight/2}" rpy="0 0 0"/>
+			<mass value="${BodyMass}"/>
+			<box_inertia m="${BodyMass}" x="${BodyLength}" y="${BodyWidth}" z="${BodyHeight}"/>
+		</inertial>
+	</link>
+
+
+	<!--Instantiation of legs: A:front, B:middle, C:rear-->
+	<leg prefix="AR" reflect="1" offset="1"/>
+	<leg prefix="AL" reflect="-1" offset="1"/>
+	<leg prefix="BR" reflect="1" offset="0"/>
+	<leg prefix="BL" reflect="-1" offset="0"/>
+	<leg prefix="CR" reflect="1" offset="-1" />
+	<leg prefix="CL" reflect="-1" offset="-1" />
+
+
+</robot>
