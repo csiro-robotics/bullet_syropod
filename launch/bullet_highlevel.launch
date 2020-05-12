@@ -21,11 +21,11 @@
   <node if="$(eval control == 'joy')" pkg="joy" type="joy_node" name="joystick"/>
   <rosparam if="$(eval control == 'key')" file="$(find syropod_keyboard_control)/config/dell_key_map.yaml" command="load"/>
   <node if="$(eval control == 'key')" pkg="syropod_keyboard_control" type="syropod_keyboard_control_node" name="key" output="screen"/>
-  <node if="$(eval control == 'rqt')" pkg="syropod_rqt_reconfigure_control" type="syropod_rqt_reconfigure_control" name="rqt" output="screen"/>
+  <node if="$(eval control == 'rqt')" pkg="syropod_rqt_reconfigure_control" type="syropod_rqt_reconfigure_control" name="rqt_control" output="screen"/>
   <node if="$(eval control == 'rqt')" pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure" output="screen"/>
 
   <!-- Remote Start-->
-  <node pkg="syropod_remote" type="syropod_remote" name="syropod_remote" output="screen">
+  <node if="$(eval arg('control') not in ('rqt'))" pkg="syropod_remote" type="syropod_remote" name="syropod_remote" output="screen">
     <param name="publish_rate" value="10"/>
     <param name="imu_sensitivity" value="3"/>
     <param name="invert_compass" value="true"/>
