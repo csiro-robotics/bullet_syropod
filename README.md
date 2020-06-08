@@ -1,33 +1,50 @@
 # Bullet Syropod
 
-This is a operation setup readme for the Bullet Syropod platform - please do not modify.
+[![Syropod Banner](https://i.imgur.com/QyMTwG3.jpg "CSIRO Robotics")](https://research.csiro.au/robotics/)
 
+This repository contains the configuration, model and launch files specific to the Bullet robot.
+
+This is an operation setup readme for the Bullet Syropod platform - please do not modify.
 These instructions are top-level, please consult readme of each individual package for further help.
 
-## Requirements
+[![Bullet Syropod](https://i.imgur.com/cHAZ10Y.gif "Bullet Syropod")](https://research.csiro.au/robotics/our-work/research-areas/legged-robots/)
+
+## Getting Started
+
+If you haven't looked at the tutorials for using Syropod Highlevel Controller, see [SHC Tutorials](https://github.com/csiro-robotics/shc_tutorials).
+
+### Requirements
 
 * Ubuntu 18.04 LTS
 * ROS Melodic
 
-## Dependencies
+### Dependencies
 
-### Base
+#### Base
 
-* [Syropod Package](https://github.com/csiro-robotics/bullet_syropod):
-  * `git clone https://github.com/csiro-robotics/bullet_syropod.git`
 * [Syropod High-level Controller](https://github.com/csiro-robotics/syropod_highlevel_controller):
   * `git clone https://github.com/csiro-robotics/syropod_highlevel_controller.git`
 * [Syropod Remote](https://github.com/csiro-robotics/syropod_remote):
   * `git clone https://github.com/csiro-robotics/syropod_remote.git`
 
-### Control Input
+#### Control Input
 
-* [Joypad Control](https://github.com/csiro-robotics/syropod_remote):
-  * `sudo apt-get install ros-kinetic-joy`
-* [RQT Reconfigure Control](https://github.com/csiro-robotics/syropod_keyboard_control) (Optional):
-  * `git clone https://github.com/csiro-robotics/syropod_keyboard_control.git`
+* [ROS Joystick](http://wiki.ros.org/joy)
+  * `sudo apt-get install ros-melodic-joy`
+* [RQT Reconfigure Control](https://github.com/csiro-robotics/syropod_rqt_reconfigure_control) (Optional):
+  * `git clone https://github.com/csiro-robotics/syropod_rqt_reconfigure_control.git`
 
 Instructions on the use of differing control inputs can be found at the individual repo links above.
+
+### Installation
+
+```bash
+mkdir -p openshc_ws/src
+cd openshc_ws/src
+git clone https://github.com/csiro-robotics/bullet_syropod.git
+cd ..
+catkin build
+```
 
 ## Operation
 
@@ -84,3 +101,16 @@ Tuning of high-level parameters is done using the following parameter files.
   * `/config/auto_pose.yaml`
 
 Consult [`syropod_highlevel_controller/config/readme.md`](https://github.com/csiro-robotics/syropod_highlevel_controller/tree/master/config) for details.
+
+## Authors
+
+* Samith Ashan
+* Benjamin Tam
+
+## License
+
+This project is licensed under the CSIRO Open Source Software Licence Agreement (variation of the BSD / MIT License) - see the [LICENSE](LICENSE) file for details.
+
+## Issues
+
+Please report bugs using [Issue Tracker](https://github.com/csiro-robotics/bullet_syropod/issues) or contact us via email [shc-support@csiro.au](mailto:shc-support@csiro.au).
