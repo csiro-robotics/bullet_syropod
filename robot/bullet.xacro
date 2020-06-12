@@ -69,8 +69,8 @@
 
 	<xacro:property name="coxaupperlimit" value="2.4" />
 	<xacro:property name="coxalowerlimit" value="-2.4" />
-	<xacro:property name="coxaeffortlimit" value="6.0" />
-	<xacro:property name="coxavelocitylimit" value="3.14159265359" />
+	<xacro:property name="coxaeffortlimit" value="8.4" />
+	<xacro:property name="coxavelocitylimit" value="2.35619449" />
 
 	<xacro:property name="basemcoxaoffset" value ="-0.0145" />
 
@@ -87,8 +87,8 @@
 
 	<xacro:property name="coxatupperlimit" value="2.4" />
 	<xacro:property name="coxatlowerlimit" value="-2.4" />
-	<xacro:property name="coxateffortlimit" value="6.0" />
-	<xacro:property name="coxatvelocitylimit" value="3.14159265359" />
+	<xacro:property name="coxateffortlimit" value="8.4" />
+	<xacro:property name="coxatvelocitylimit" value="2.35619449" />
 
 	<xacro:property name="coxacoxatoffset" value ="-0.02804" />
 	<xacro:property name="coxacoxatoffset2" value ="0.0457" />
@@ -107,8 +107,8 @@
 
 	<xacro:property name="femurupperlimit" value="2.4" />
 	<xacro:property name="femurlowerlimit" value="-2.4" />
-	<xacro:property name="femureffortlimit" value="6.0" />
-	<xacro:property name="femurvelocitylimit" value="3.141592653590" />
+	<xacro:property name="femureffortlimit" value="8.4" />
+	<xacro:property name="femurvelocitylimit" value="2.35619449" />
 
 	<xacro:property name="coxatfemuroffset" value="0.02898" />
 	<xacro:property name="coxatfemuroffset2" value="-0.06024" />
@@ -126,8 +126,8 @@
 
 	<xacro:property name="tibiaupperlimit" value="2.4" />
 	<xacro:property name="tibialowerlimit" value="-2.4" />
-	<xacro:property name="tibiaeffortlimit" value="6.0" />
-	<xacro:property name="tibiavelocitylimit" value="3.14159265359" />
+	<xacro:property name="tibiaeffortlimit" value="8.4" />
+	<xacro:property name="tibiavelocitylimit" value="2.35619449" />
 
 	<xacro:property name="femurtibiaoffset" value="0.114" />
 
@@ -143,8 +143,8 @@
 
 	<xacro:property name="tarsusupperlimit" value="2.4" />
 	<xacro:property name="tarsuslowerlimit" value="-2.4" />
-	<xacro:property name="tarsuseffortlimit" value="6.0" />
-	<xacro:property name="tarsusvelocitylimit" value="3.14159265359" />
+	<xacro:property name="tarsuseffortlimit" value="8.4" />
+	<xacro:property name="tarsusvelocitylimit" value="2.35619449" />
 
 	<xacro:property name="tibiatarsusoffset" value="0.114" />
 

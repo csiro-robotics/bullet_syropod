@@ -114,10 +114,10 @@ syropod:
 
 ########################################################################################################################
     # Walker parameters
-    gait_type:            bipod_gait
+    gait_type:            tripod_gait
     body_clearance:       0.250
     step_frequency:       {default:  1.100, min:  0.001, max:  5.000, step:  0.100} #Reconfigurable
-    swing_height:         {default:  0.060, min:  0.010, max:  0.180, step:  0.010} #Reconfigurable
+    swing_height:         {default:  0.090, min:  0.010, max:  0.180, step:  0.010} #Reconfigurable
     swing_width:          {default:  0.000, min: -0.300, max:  0.300, step:  0.010} #Reconfigurable
     step_depth:           {default:  0.000, min:  0.000, max:  0.000, step:  0.000} #Reconfigurable
     stance_span_modifier: {default:  0.000, min: -1.000, max:  1.000, step:  0.100} #Reconfigurable
