@@ -12,7 +12,6 @@
 
 	<gazebo>
 		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-			<robotNamespace></robotNamespace>
 		</plugin>
 
 		<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
