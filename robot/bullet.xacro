@@ -12,13 +12,12 @@
 
 	<gazebo>
 		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-			<robotNamespace>/syropod</robotNamespace>
 		</plugin>
 
 		<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
 			<alwaysOn>true</alwaysOn>
 			<bodyName>base_link</bodyName>
-			<topicName>imu</topicName>
+			<topicName>imu/data</topicName>
 			<serviceName>imu_service</serviceName>
 			<gaussianNoise>0.0</gaussianNoise>
 			<updateRate>20.0</updateRate>
