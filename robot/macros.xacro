@@ -6,23 +6,27 @@
 <!-- Modified by Benjamin Tam <benjamin.tam@data61.csiro.au> -->
 <!-- Modified by Samith Ashan <samith.ashan@data61.csiro.au> -->
 
-<robot name="weaver_boxmodel" 
+<robot name="bullet_boxmodel"
     xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <macro name="cylinder_inertia" params="m r h">
+    <xacro:macro name="cylinder_inertia" params="m r h">
         <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0" iyy="${m*(3*r*r+h*h)/12}" iyz = "0" izz="${m*r*r/2}" />
-    </macro>
+    </xacro:macro>
 
-    <macro name="box_inertia" params="m x y z">
+    <xacro:macro name="box_inertia" params="m x y z">
         <inertia ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0" iyy="${m*(x*x+z*z)/12}" iyz = "0" izz="${m*(x*x+z*z)/12}" />
-    </macro>
+    </xacro:macro>
 
-    <macro name="sphere_inertia" params="m r">
+    <xacro:macro name="sphere_inertia" params="m r">
         <inertia ixx="${2*m*r*r/5}" ixy = "0" ixz = "0" iyy="${2*m*r*r/5}" iyz = "0" izz="${2*m*r*r/5}" />
-    </macro>
+    </xacro:macro>
+
+    <material name="black">
+        <color rgba= "0 0 0 1"/>
+    </material>
 
 
-    <macro name="leg" params="prefix offset reflect">
+    <xacro:macro name="leg" params="prefix offset reflect">
 
         <!-- base_motor link (Base motor visual component is attached to the main body)-->
         <link name="${prefix}_basem_link">
@@ -43,7 +47,7 @@
             </collision>
             <inertial>
                 <mass value="${basemmass}"/>
-                <box_inertia m="${basemmass}" x="${basemlength}" y="${basemwidth}" z="${basemheight}"/>
+                <xacro:box_inertia m="${basemmass}" x="${basemlength}" y="${basemwidth}" z="${basemheight}"/>
             </inertial>
         </link>
         <joint name="${prefix}_basem_joint" type="fixed">
@@ -60,7 +64,7 @@
                     <mesh filename="package://bullet_syropod/meshes/Coxa.STL" />
                 </geometry>
                 <origin xyz="0 ${reflect*coxa_d} ${coxaheight/4}" rpy="0 0 ${reflect*coxa_pitch}"/>
-                <material name="white"/>
+                <material name="black"/>
             </visual>
             <collision>
                 <geometry>
@@ -70,7 +74,7 @@
             </collision>
             <inertial>
                 <mass value="${coxamass}"/>
-                <box_inertia m="${coxamass}" x="${coxalength}" y="${coxawidth}" z="${coxaheight}"/>
+                <xacro:box_inertia m="${coxamass}" x="${coxalength}" y="${coxawidth}" z="${coxaheight}"/>
             </inertial>
         </link>
         <joint name="${prefix}_coxa_joint" type="revolute">
@@ -100,7 +104,7 @@
                     <mesh filename="package://bullet_syropod/meshes/Coxa_t.STL" />
                 </geometry>
                 <origin xyz="0 0 ${coxacoxatoffset}" rpy="0 0 ${coxat_yaw}"/>
-                <material name="white"/>
+                <material name="black"/>
             </visual>
             <collision>
                 <geometry>
@@ -110,7 +114,7 @@
             </collision>
             <inertial>
                 <mass value="${coxatmass}"/>
-                <box_inertia m="${coxatmass}" x="${coxatlength}" y="${coxatwidth}" z="${coxatheight}"/>
+                <xacro:box_inertia m="${coxatmass}" x="${coxatlength}" y="${coxatwidth}" z="${coxatheight}"/>
             </inertial>
         </link>
         <joint name="${prefix}_coxat_joint" type="revolute">
@@ -140,7 +144,7 @@
                     <mesh filename="package://bullet_syropod/meshes/Femur_tibia.STL" />
                 </geometry>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
-                <material name="white"/>
+                <material name="black"/>
             </visual>
             <collision>
                 <geometry>
@@ -151,7 +155,7 @@
             </collision>
             <inertial>
                 <mass value="${femurmass}"/>
-                <box_inertia m="${femurmass}" x="${femurlength}" y="${femurwidth}" z="${femurheight}"/>
+                <xacro:box_inertia m="${femurmass}" x="${femurlength}" y="${femurwidth}" z="${femurheight}"/>
             </inertial>
         </link>
         <joint name="${prefix}_femur_joint" type="revolute">
@@ -181,7 +185,7 @@
                     <mesh filename="package://bullet_syropod/meshes/Femur_tibia.STL" />
                 </geometry>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
-                <material name="white"/>
+                <material name="black"/>
             </visual>
             <collision>
                 <geometry>
@@ -193,7 +197,7 @@
             </collision>
             <inertial>
                 <mass value="${tibiamass}"/>
-                <box_inertia m="${tibiamass}" x="${tibialength}" y="${tibiawidth}" z="${tibiaheight}"/>
+                <xacro:box_inertia m="${tibiamass}" x="${tibialength}" y="${tibiawidth}" z="${tibiaheight}"/>
             </inertial>
         </link>
         <joint name="${prefix}_tibia_joint" type="revolute">
@@ -223,7 +227,7 @@
                     <mesh filename="package://bullet_syropod/meshes/Tarsus.STL" />
                 </geometry>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
-                <material name="white"/>
+                <material name="black"/>
             </visual>
             <collision>
                 <geometry>
@@ -234,7 +238,7 @@
             </collision>
             <inertial>
                 <mass value="${tarsusmass}"/>
-                <cylinder_inertia m="${tarsusmass}" h="${tarsuslength}" r="${tarsusradius}"/>
+                <xacro:cylinder_inertia m="${tarsusmass}" h="${tarsuslength}" r="${tarsusradius}"/>
                 <origin xyz="${tarsuslength/2} 0 0" rpy="0 -1.5708 0"/>
             </inertial>
         </link>
@@ -262,7 +266,7 @@
         <gazebo reference="${prefix}_basem_link">
             <mu1>${defaultmu1}</mu1>
             <mu2>${defaultmu2}</mu2>
-            <material>Gazebo/White</material>
+            <material>Gazebo/Black</material>
             <!-- <selfCollide>True</selfCollide> -->
             <gravity>True</gravity>
         </gazebo>
@@ -311,7 +315,7 @@
             <gravity>True</gravity>
         </gazebo>
 
-    </macro>
+    </xacro:macro>
 
 
 
