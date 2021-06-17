@@ -183,18 +183,18 @@
 		<inertial>
 			<origin xyz="0 0 ${BodyHeight/2}" rpy="0 0 0"/>
 			<mass value="${BodyMass}"/>
-			<box_inertia m="${BodyMass}" x="${BodyLength}" y="${BodyWidth}" z="${BodyHeight}"/>
+			<xacro:box_inertia m="${BodyMass}" x="${BodyLength}" y="${BodyWidth}" z="${BodyHeight}"/>
 		</inertial>
 	</link>
 
 
 	<!--Instantiation of legs: A:front, B:middle, C:rear-->
-	<leg prefix="AR" reflect="1" offset="1"/>
-	<leg prefix="AL" reflect="-1" offset="1"/>
-	<leg prefix="BR" reflect="1" offset="0"/>
-	<leg prefix="BL" reflect="-1" offset="0"/>
-	<leg prefix="CR" reflect="1" offset="-1" />
-	<leg prefix="CL" reflect="-1" offset="-1" />
+	<xacro:leg prefix="AR" reflect="1" offset="1"/>
+	<xacro:leg prefix="AL" reflect="-1" offset="1"/>
+	<xacro:leg prefix="BR" reflect="1" offset="0"/>
+	<xacro:leg prefix="BL" reflect="-1" offset="0"/>
+	<xacro:leg prefix="CR" reflect="1" offset="-1" />
+	<xacro:leg prefix="CL" reflect="-1" offset="-1" />
 
 
 </robot>

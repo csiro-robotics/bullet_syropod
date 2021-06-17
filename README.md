@@ -15,8 +15,8 @@ If you haven't looked at the tutorials for using Syropod Highlevel Controller, s
 
 ### Requirements
 
-* Ubuntu 18.04 LTS
-* ROS Melodic
+* Ubuntu 18.04 LTS and ROS Melodic; or
+* Ubuntu 20.04 LTS and ROS Noetic
 
 ### Dependencies
 
@@ -30,7 +30,7 @@ If you haven't looked at the tutorials for using Syropod Highlevel Controller, s
 #### Control Input
 
 * [ROS Joystick](http://wiki.ros.org/joy)
-  * `sudo apt-get install ros-melodic-joy`
+  * `sudo apt-get install ros-$ROS_DISTRO-joy`
 * [RQT Reconfigure Control](https://github.com/csiro-robotics/syropod_rqt_reconfigure_control) (Optional):
   * `git clone https://github.com/csiro-robotics/syropod_rqt_reconfigure_control.git`
 

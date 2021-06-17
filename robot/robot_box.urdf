@@ -1,14 +1,16 @@
-<robot name="simple_box">
+<?xml version="1.0"?>
+<robot name="simple_box"
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <macro name="box_inertia" params="m x y z">
+  <xacro:macro name="box_inertia" params="m x y z">
     <inertia ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0" iyy="${m*(x*x+z*z)/12}" iyz = "0" izz="${m*(x*x+z*z)/12}" />
-  </macro>
+  </xacro:macro>
 
   <link name="box">
 
     <inertial>
       <mass value="1000.0" />
-      <box_inertia m="1.0" x="0.6" y="0.2" z="0.24"/>
+      <xacro:box_inertia m="1.0" x="0.6" y="0.2" z="0.24"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0.12"/>
